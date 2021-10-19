@@ -53,10 +53,10 @@ test를 진행하는 모듈
 train, val 데이터를 입력받는 모듈
 ### layers.py
 yolov3에 들어가는 layer들을 정의하는 모듈
-1. class EmptyLayer
-empty layer
-2. class YOLOV3Layer
-Yolo layer
-3. def block_to_layer
-layer 정보가 담긴 block을 layer로 변환
+1. class EmptyLayer  
++ empty layer
+2. class YOLOV3Layer  
++ Yolo layer
+3. def block_to_layer  
++ layer 정보가 담긴 block을 layer로 변환
 ## layer 3
