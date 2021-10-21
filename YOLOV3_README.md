@@ -11,12 +11,12 @@
 
 ## 코드 구성
 ### (layer 0)
-> main.py : API, 확인용  
+> main.py : API, 확인용
 
 ### (layer 1)
 > darknet.py : weight 로드, darknet을 모델링한다.  
-> train.py : data를 load하고 train 한다. 기록(loss, weight)을 print, 저장  
-> test.py : test  
+> train.py : 모델 및 데이터를 입력받아 train 한다. loss, weight를 기록, 저장  
+> test.py : inference test  
 
 ### (layer 2)
 > dataload.py : 데이터 로드  
@@ -24,33 +24,39 @@
 > config.py : configuration 파일을 리스트로 읽어오기  
 > loss.py : loss를 계산  
 > logger.py : 파이토치 log를 print, 저장하는 기능  
-> (!)yolov3_evaluate.py : evaluation을 진행. test, train 등에 사용 (모듈 이름 수정 필요(너무 김))  
-> (!)optm.py : optimizer 정의 (모듈 이름 수정 필요)  
+> evaluate.py : evaluation을 진행. test, train 등에 사용 
 
 ### (layer 3)
-> yolov3_utils.py : yolov3에 필요한 기타 기능들 (IoU 계산, 좌표변환 등)  
-> common_utils.py : 일반적으로 필요로하는 기능들 (to_CPU 등)  
+> yoloutils.py : yolov3에 필요한 기타 기능들 (IoU 계산, 좌표변환 등)  
+> utils.py : 일반적으로 필요로하는 기능들 (to_CPU 등)  
 
 ## layer 0
 ### main.py
 main API
+
 ## layer 1
 ### darknet.py
 yolov3의 네트워크 모듈
-1. class Darknet  
+1. class Darknet : Yolov3 layer 구조 <- config.py, layers.py
 + forward 
-+ parameter save 기능 (구현 예정)
++ parameter save 기능 (추후 구현 예정)
 ### train.py
 train을 진행하는 모듈
-1. det run
-+ parameter 값에 따라 train 진행
+1. class Default_train : train template, (model, data)를 입력받음
++ def __create_dataloader : data loader 정의
++ def __optimizer : optimizer 정의
++ def __update_lr : learning rate update
++ def __log_progress : loss, iou 등을 기록 및 print <- logger.py
++ def evaluate : val에 대한 evaluate 및 기록 <- evaluate.py
++ def run : 외부에서 train을 실행 <- loss.py
+2. class YOLO_train : yolov3 train, 위의 class를 상속받아 yolov3에 맞게 메소드 오버라이딩
+3. class GAN_train : gan train, 위의 class를 상속받아 gan에 맞게 메소드 오버라이딩
 ### test.py
 test를 진행하는 모듈
-1. det run
-+ test dataset에 대해 test 진행
+
 ## layer 2
 ### dataload.py
-train, val 데이터를 입력받는 모듈
+dataload와 관련된 모듈
 ### layers.py
 yolov3에 들어가는 layer들을 정의하는 모듈
 1. class EmptyLayer  
@@ -59,4 +65,20 @@ yolov3에 들어가는 layer들을 정의하는 모듈
 + Yolo layer
 3. def block_to_layer  
 + layer 정보가 담긴 block을 layer로 변환
+### config.py
+configuration file을 읽어 list로 변환 기능
+1. def cfg_to_block : .cfg 파일을 block list로 변환
+### loss.py
+loss를 계산하는 모듈
+1. def compute_loss : loss를 계산
+2. def build_targets
+### logger.py
+log 기능을 제공
+### evaluate.py
+evaluate 기능을 제공
+
 ## layer 3
+### yoloutils.py
+yolov3에 필요한 편의적인 기능들을 제공하는 모듈
+### utils.py
+전반적으로 편리한 기능들을 제공
