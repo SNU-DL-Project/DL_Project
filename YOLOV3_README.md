@@ -14,13 +14,13 @@
 > main.py : API
 
 ### (layer 1)
-> darknet.py : weight 로드받아 darknet을 모델링한다. 세이브 기능도 존재. 
+> darknet.py : weight 로드받아 darknet을 모델링한다. 세이브 기능도 존재.  
 > train.py : 모델 및 데이터를 입력받아 train 한다. loss, weight를 기록, 저장  
 > test.py : inference test
 
 ### (layer 2)
-> dataload.py : 외부 데이터(yolo .cfg 파일, weight 파일, dataset 등) 로드, 세이브
-> layers.py : yolo layer 정의, configuration 파일을 layer로 변환    
+> dataload.py : 외부 데이터(yolo .cfg 파일, weight 파일, dataset 등) 로드, 세이브  
+> layers.py : yolo layer 정의, configuration 파일을 layer로 변환  
 > loss.py : yolo loss를 계산  
 > logger.py : 파이토치 log를 print, 저장하는 기능  
 > evaluate.py : evaluation을 진행. test, train에 사용 
