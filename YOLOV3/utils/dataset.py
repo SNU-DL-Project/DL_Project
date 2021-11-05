@@ -8,6 +8,7 @@ import warnings
 import numpy as np
 from PIL import Image
 from PIL import ImageFile
+import zipfile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -57,7 +58,19 @@ class ImageFolder(Dataset):
 
 class ListDataset(Dataset):
     def __init__(self, list_path, img_size=416, multiscale=True, transform=None):
-        #ex)data/
+        # 알집 폴더에서 데이터 다운로드
+        try:
+            os.rmdir('../data/images/') # 기존에 img가담긴 images 디렉이 비어있으면 삭제_tag
+            alreadyexist=False
+        except OSError as ex: #아니라면 그냥 지나가기
+            alreadyexist=True
+            pass
+
+        if not alreadyexist :# 다시다운_tag
+            with zipfile.ZipFile('../data/img_reformed.zip', 'r') as existing_zip:
+                existing_zip.extractall('../data/images/')
+
+
         #ex)  list_path = ['data/custom/images/P0000.jpg', 'data/custom/images/P0001.jpg' ....]
         with open(list_path, "r") as file:
             self.img_files = file.readlines()
