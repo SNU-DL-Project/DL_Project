@@ -1,0 +1,160 @@
+[33mcommit 82bebea7936c59977c016d21568d3c39136f21e1[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdw2[m[33m)[m
+Author: kyoungmokoo <lilotech@snu.ac.kr>
+Date:   Thu Nov 11 01:52:18 2021 +0900
+
+    ipdate label.txt
+
+[33mcommit 641ab71165f3e0a186d7d7592511cc4031b73c59[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Wed Nov 10 10:38:29 2021 +0900
+
+    Update readme.md
+
+[33mcommit a3c869f65b2f0e851676e6b5bbb8f0fb0d7340af[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Wed Nov 10 10:38:14 2021 +0900
+
+    Update readme.md
+
+[33mcommit f1ad6a2da8e7b756572c4642e1894081bd2feea4[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Wed Nov 10 10:35:47 2021 +0900
+
+    Add files via upload
+
+[33mcommit 3460455eeb7998b88b0ecd4dd79a2431fbee7e66[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Wed Nov 10 10:30:55 2021 +0900
+
+    Create readme.md
+
+[33mcommit 51041d32c1d0f2fd5b6e52a3a1409c629e25487a[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Sat Nov 6 16:28:59 2021 +0900
+
+    Add files via upload
+    
+    20211106 update
+
+[33mcommit f86c510ff78225e6c3be4a62122233476dd084f2[m
+Merge: 52bc018 9bbab2d
+Author: donguri <70640776+dwsmart32@users.noreply.github.com>
+Date:   Sat Nov 6 03:35:26 2021 +0900
+
+    Merge pull request #3 from SNU-DL-Project/dw
+    
+    dataset.py and cfg, data folder
+
+[33mcommit 9bbab2d009ca23fab1d8d40b996df64d1c64dd1a[m[33m ([m[1;31morigin/dw[m[33m)[m
+Author: dwsmart32 <dwsmart32@snu.ac.kr>
+Date:   Sat Nov 6 03:32:29 2021 +0900
+
+    dataset.py and cfg, data folder
+
+[33mcommit 52bc018158fe1d5cfb42af2a6ef787f52bd0294c[m
+Merge: 1b58ce3 92e8108
+Author: donguri <70640776+dwsmart32@users.noreply.github.com>
+Date:   Sat Nov 6 01:24:19 2021 +0900
+
+    Merge pull request #2 from SNU-DL-Project/dw
+    
+    add dataloader.py
+
+[33mcommit 92e8108a1076ed9ccfc4373cd65a8375fb99fbe3[m
+Author: dwsmart32 <dwsmart32@snu.ac.kr>
+Date:   Sat Nov 6 01:20:38 2021 +0900
+
+    add dataloader.py
+
+[33mcommit 1b58ce3b2b0ac30158552aeba792b96d6b525f87[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Fri Nov 5 20:09:34 2021 +0900
+
+    Add files via upload
+    
+    20211105 update
+
+[33mcommit 6860156f094e99c4bbfe20fba355e82693c570d5[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Fri Nov 5 20:04:37 2021 +0900
+
+    Delete yolo_label.zip
+    
+    20211105 update
+
+[33mcommit 3373ba1ff05e3a2e27277255f02714d2028ebabf[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Fri Nov 5 20:02:56 2021 +0900
+
+    Update DOTA_ANALYSIS.ipynb
+    
+    20211105 update
+
+[33mcommit 438eb556b34faf6858260f75c158c00a476bd1ec[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Thu Nov 4 10:52:16 2021 +0900
+
+    Add files via upload
+
+[33mcommit a45ce3044e3643e63d0f3bc0f1ae3a4883a94479[m
+Author: kyoungmokoo <93332031+kyoungmokoo@users.noreply.github.com>
+Date:   Thu Nov 4 10:38:39 2021 +0900
+
+    Add files via upload
+
+[33mcommit 89a479672acc6d98ede37e46a2c52dc6dfc8e2ed[m
+Merge: b55a0b1 88bec16
+Author: donguri <70640776+dwsmart32@users.noreply.github.com>
+Date:   Thu Nov 4 10:33:22 2021 +0900
+
+    Merge pull request #1 from SNU-DL-Project/dw
+    
+    add datapreprocessing.ipynb
+
+[33mcommit 88bec168a41d04c67fabeebb059ae8628c0aaee2[m[33m ([m[1;32mmaster[m[33m)[m
+Author: dwsmart32 <dwsmart32@snu.ac.kr>
+Date:   Thu Nov 4 10:27:24 2021 +0900
+
+    add datapreprocessing.ipynb
+
+[33mcommit b55a0b15cc3ffa92fbdda282b4f03da7ece4a29a[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Fri Oct 22 13:30:03 2021 +0900
+
+    Add files via upload
+
+[33mcommit 1f774cc0271310060695104949146cb824fd9f64[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Fri Oct 22 13:17:56 2021 +0900
+
+    Update YOLOV3_README.md
+
+[33mcommit faf092ec53e38fd2be52035d347cfbc0d03f98fd[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Fri Oct 22 13:15:44 2021 +0900
+
+    Update YOLOV3_README.md
+
+[33mcommit fc970cad172a7ef8308cefe4cc2212938a6955cc[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Thu Oct 21 18:05:34 2021 +0900
+
+    Update YOLOV3_README.md
+
+[33mcommit 7304dc32ae5f972cfa8fc488d6f3b12759ebc8d8[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Tue Oct 19 19:10:06 2021 +0900
+
+    Update YOLOV3_README.md
+
+[33mcommit ddd9981db4989ac5ce744b9e6be990d98c82298a[m
+Author: gs16100 <63445415+gs16100@users.noreply.github.com>
+Date:   Tue Oct 19 19:09:27 2021 +0900
+
+    Create YOLOV3_README.md
+
+[33mcommit 099d3eaa0d6e50a9dd917d7c840c44d887822a44[m
+Author: donguri <70640776+dwsmart32@users.noreply.github.com>
+Date:   Tue Oct 19 00:35:24 2021 +0900
+
+    Initial commit

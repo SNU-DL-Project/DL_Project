@@ -12,6 +12,7 @@ from .yoloutils import xywh2xyxy_np
 def srgan_downsample(imgdata, noise=True): # type(img) = torch.Tensor
     #noise filter는 따로 내장함수가 없더군요. 착각했습니다. 원하시는 만큼 mean var값 변경시켜가면서 noise 정도를 정하시면 됩니다.
     #전자는 gaussian 정규분포 노이즈입니다. 후자(salt and pepper)는 흑백 노이즈입니다.
+    imgdata=torch.squeeze(imgdata,0)
     def noisy(image,noise_typ):
         if noise_typ == "gauss":
             row,col,ch= image.shape
@@ -59,6 +60,8 @@ def srgan_downsample(imgdata, noise=True): # type(img) = torch.Tensor
     documentation : https://pillow.readthedocs.io/en/stable/reference/ImageFilter.html
     noise 종류는 gauss를 하시던지 s&p를 쓰시던지 아무거나 쓰시면 됩니다. 아무래도 색필터가 더 낫지않을까 싶긴합니다
     '''
+    noiseImage = torch.unsqueeze(noiseImage,0)
+
     return noiseImage
 
 class ImgAug(object):

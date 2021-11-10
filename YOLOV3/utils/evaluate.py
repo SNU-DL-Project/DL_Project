@@ -12,7 +12,7 @@ from torch.autograd import Variable
 from utils.dataload import create_validation_data_loader
 
 from utils.yoloutils import ap_per_class, get_batch_statistics, non_max_suppression, xywh2xyxy
-from utils.utils import load_classes, to_cpu
+from utils.utils import  to_cpu
 '''
 from pytorchyolo.utils.datasets import ListDataset
 from pytorchyolo.utils.transforms import DEFAULT_TRANSFORMS

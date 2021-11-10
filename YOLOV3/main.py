@@ -5,7 +5,7 @@ import train
 import test
 
 
-config_path = 'dddddd'
+config_path = "config\custom.txt"
 data = [] # data는 별도의 모듈에서 진행
 YOLO_MODEL = darknet.Darknet(config_path)
 train.YOLO_train(YOLO_MODEL, data)
