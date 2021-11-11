@@ -9,10 +9,12 @@ import torchvision.transforms as transforms
 
 from .yoloutils import xywh2xyxy_np
 
-def srgan_downsample(imgdata, noise=True): # type(img) = torch.Tensor
+def srgan_downsample(imgdata, batch_size, noise=True): # type(img) = torch.Tensor
     #noise filter는 따로 내장함수가 없더군요. 착각했습니다. 원하시는 만큼 mean var값 변경시켜가면서 noise 정도를 정하시면 됩니다.
     #전자는 gaussian 정규분포 노이즈입니다. 후자(salt and pepper)는 흑백 노이즈입니다.
-    imgdata=torch.squeeze(imgdata,0)
+    imgdatalist=[]
+    for i in range(0,batch_size):
+        imgdatalist.append(imgdata[i])
     def noisy(image,noise_typ):
         if noise_typ == "gauss":
             row,col,ch= image.shape
@@ -43,26 +45,32 @@ def srgan_downsample(imgdata, noise=True): # type(img) = torch.Tensor
 
 
     #final_img는 Pillow type입니다. dataloader의 dataset(=imgdata)은 tensor형태일것이니, tensor->numpy(->pillow 작업이 필요힙니다.
-    get_img=(Image.fromarray(imgdata.numpy()))
 
-    if noise:
-        #변환작업
-        blurImage = get_img.filter(ImageFilter.BLUR)
-        downImage =  blurImage.resize((416,416)) #size=(416,416) or something
-        noiseImage = torch.Tensor(noisy(np.array(downImage), 'gauss'))
-        #output인 noiseimage는 numpy 형태이므로 다시 tensor로 바꿔주어야합니다.
-    else:
-        downImage = get_img.resize((416, 416))  # size=(416,416) or something
-        noiseImage = torch.Tensor(downImage)
+    imgdatalist_updated=[]
+    tmp=[]
+    for i in range(0,batch_size):
+        get_img=(Image.fromarray(imgdatalist[i].numpy()))
+        if noise:
+            #변환작업
+            blurImage = get_img.filter(ImageFilter.BLUR)
+            downImage =  blurImage.resize((416,416)) #size=(416,416) or something
+            noiseImage = torch.Tensor(noisy(np.array(downImage), 'gauss'))
+            #output인 noiseimage는 numpy 형태이므로 다시 tensor로 바꿔주어야합니다.
+        else:
+            downImage = get_img.resize((416, 416))  # size=(416,416) or something
+            noiseImage = torch.Tensor(downImage)
+
+        tmp.append(noiseImage)
+
 
     '''
     blur종류는 다음과 같습니다. BLUR, Box BLUR, Gaussian BLUR, 블러 정도를 조절하고싶다면 다음을 참고하세요
     documentation : https://pillow.readthedocs.io/en/stable/reference/ImageFilter.html
     noise 종류는 gauss를 하시던지 s&p를 쓰시던지 아무거나 쓰시면 됩니다. 아무래도 색필터가 더 낫지않을까 싶긴합니다
     '''
-    noiseImage = torch.unsqueeze(noiseImage,0)
 
-    return noiseImage
+    result=torch.stack(tmp,dim=0)
+    return result
 
 class ImgAug(object):
     def __init__(self, augmentations=[]):
