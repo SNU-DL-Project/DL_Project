@@ -1,7 +1,7 @@
 # 주의사항
-data/custom에 images, labels 폴더 넣기  
-ex : data/custom/images/P0000.jpg  
-pytorch 버전에 따라 오류가 생길 가능성이 있음.  
+### data/custom에 images, labels 폴더 넣기 (ex : data/custom/images/P0000.jpg)  
+### pytorch 버전에 따라 오류가 생길 가능성 존재.  
+### 사용중인 GPU 용량에 따라 오류가 생길 존재. cfg file의 # Training 밑의 batch를 2 or 4가 아닌 1로 수정.
 
 # 사용법
 main.py 실행  
