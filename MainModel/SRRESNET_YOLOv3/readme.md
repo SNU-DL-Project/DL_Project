@@ -1,11 +1,11 @@
 # 주의사항
-### data/custom에 images, labels 폴더 넣기 (ex : data/custom/images/P0000.jpg)  
+### 구글드라이브의 data 폴더를 그대로 넣기
 ### pytorch 버전에 따라 오류가 생길 가능성 존재.  
 ### 사용중인 GPU 용량에 따라 오류가 생길 존재. cfg file의 # Training 밑의 batch를 2 or 4가 아닌 1로 수정.
 
 # 사용법
-main.py 실행  
-main.py에 적힌 주석 참고  
+v0.x.x 폴더 들어간 후, 구글드라이브에 있는 data 폴더를 넣기  
+main.py 실행 및 main.py에 적힌 주석 참고  
 아직 완벽히 구현되지 않아, 구체적인 설명은 첨부하지 않았습니다. 
 
 # Error Report
@@ -13,11 +13,11 @@ main.py에 적힌 주석 참고
 
 # v0.1.0 (2021.11.10.)  
 ### 주요 변경사항
-YOLOv3 구현
+##### YOLOv3 구현
 
 # v0.2.0 (2021.11.12.)  
 ### 주요 변경사항
-SRResnet 구현 (SRGAN은 Pruning이 힘들 듯)
+##### SRResnet 구현 (SRGAN은 Pruning이 힘들 듯)
 ### 기타 변경사항
 + Train Class training path 변수화, loggers 분리  
 + Train Class 함수 train_on_step(FP, BP 통합), train_init 구현(run 함수 간단화)  
@@ -26,3 +26,14 @@ SRResnet 구현 (SRGAN은 Pruning이 힘들 듯)
 # v0.2.1 (2021.11.12.)  
 ### 기타 변경사항
 + labels 관련 문제 해결
+
+# v0.3.0 (2021.11.21.)  
+### 주요 변경사항
+##### darknet.py, srmodels.py를 models.py로 통합  
+##### SRRES upsample 2->4로 변경  
+##### 예비실험 결과 바탕으로 config file, loss 비율 등 hyperparameter 조절
+### 기타 변경사항
++ downsample할 때 Gaussian Blur 처리  
++ train 후 모델 저장 기능 추가  
++ augmentation normal -> strong 변경 (더 강한 augmentation)  
++ input size 관련 오류 수정  
