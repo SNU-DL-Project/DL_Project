@@ -37,3 +37,9 @@ main.py 실행 및 main.py에 적힌 주석 참고
 + train 후 모델 저장 기능 추가  
 + augmentation normal -> strong 변경 (더 강한 augmentation)  
 + input size 관련 오류 수정  
+
+# v0.3.1 (2021.11.25.)
+### 기타 변경사항
++ yolov3, srres cfg파일 수정  
++ class별 AP evaluate 기능 추가  
++ labels 수정
