@@ -43,3 +43,10 @@ main.py 실행 및 main.py에 적힌 주석 참고
 + yolov3, srres cfg파일 수정  
 + class별 AP evaluate 기능 추가  
 + labels 수정
+
+# v0.4.0 (2021.11.26.)
+### 주요 변경사항  
+##### SRRES+YOLOv3 모델 구현  
+### 기타 변경사항  
++ loss파일 loss output 관련 수정  
++ 예비실험 결과 반영(config, blur)  
