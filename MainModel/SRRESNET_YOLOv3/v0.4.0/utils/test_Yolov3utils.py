@@ -95,7 +95,8 @@ def showpic(images, row_num): #type(img)=list of 3D tensor [C,W,H]
     figure, ax = plt.subplots(nrows=rows, ncols=cols, figsize=(imgsize, imgsize))
 
     colors=["orange",  "yellowgreen", "cyan",  "pink",  "white", "purple"]
-    patches = [ mpatches.Patch(color=colors[i], label="{l}".format(l=colors[i]) ) for i in range(len(colors)) ]
+    labels=["pedestrian",  "car", "van",  "truck",  "bus", "motor"]
+    patches = [ mpatches.Patch(color=colors[i], label="{l}".format(l=labels[i]) ) for i in range(len(colors)) ]
 
     # put those patched as legend-handles into the legend
     plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=6, borderaxespad=0. )
