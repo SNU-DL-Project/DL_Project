@@ -1,7 +1,7 @@
 import random
 import torchvision.utils as U
 import os
-from bounding_box import bounding_box as bb
+import utils.bounding_box as bb
 import torchvision.transforms as transforms
 import torch
 import matplotlib.pyplot as plt
@@ -9,7 +9,7 @@ import matplotlib.patches as mpatches
 trans = transforms.ToTensor()
 
 # 10000장의 각각에대한 이미지 list  /  10000개에 대한 각각의 dir가 담긴 txt_label_origin, txt_label_inference
-def Yolo(img_origin, img_inference, txt_label_origin, txt_label_inference, row_nums):
+def Yolo(img_origin, img_inference, txt_label_origin, txt_label_inference, row_nums, wantlabel=False):
 
     #dictionary
     label_dic = { 0 : "pedestrian", 1 : "car", 2 : "van", 3 : "truck", 4 : "bus",
@@ -30,30 +30,34 @@ def Yolo(img_origin, img_inference, txt_label_origin, txt_label_inference, row_n
     1. bbox 그리기 (score넣기?)
     2. 저장하기 
     3. print 하기
+    4. metric 저장 및 출력
     '''
     img_list_tmp =[]
 
     for i in range(0, len(img_origin)):
         #1
-        ##origin
+        ##origin bbox drawing
         label_origin=read_txt(txt_label_origin[i])
         img_origin[i]=img_origin[i].numpy().transpose(2,1,0)
-        for j in range(0,len(label_origin)):
-            x1,y1,x2,y2 = xywh2minmax(label_origin[j][1], label_origin[j][2], label_origin[j][3], label_origin[j][4])
-            bb.add(img_origin[i], x1, y1, x2, y2, None, color_dic[int(label_origin[j][0])]) # 샐깔
+        for j in range(0,len(label_origin)): #하나의 txt파일안을 돌면서
+            if wantlabel == False or label_dic[int(label_origin[j][0])] in wantlabel:
+                x1,y1,x2,y2 = xywh2minmax(label_origin[j][1], label_origin[j][2], label_origin[j][3], label_origin[j][4])
+                bb.add(img_origin[i], x1, y1, x2, y2, None, color_dic[int(label_origin[j][0])]) # 색깔
         #label_dic[int(label_origin[i][0])] -> class명
 
-        ##inference
+        ##inference bbox drawing
         label_inference = read_txt(txt_label_inference[i])
         img_inference[i]=img_inference[i].numpy().transpose(2,1,0)
         for j in range(0,len(label_inference)):
-            x1,y1,x2,y2 = xywh2minmax(label_inference[j][1], label_inference[j][2], label_inference[j][3], label_inference[j][4])
-            bb.add(img_inference[i], x1, y1, x2, y2, None,color_dic[int(label_inference[j][0])]) # 샐깔
-        #label_dic[int(label_origin[i][0])] -> class명
+            if wantlabel == False or label_dic[int(label_inference[j][0])] in wantlabel:
+                x1,y1,x2,y2 = xywh2minmax(label_inference[j][1], label_inference[j][2], label_inference[j][3], label_inference[j][4])
+                bb.add(img_inference[i], x1, y1, x2, y2, None,color_dic[int(label_inference[j][0])]) # 색깔
+        #label_dic[int(label_inference[i][0])] -> class명
+
         #2
-        name = txt_label_origin[i].split('/')[-1].split('.')[0] #############################################################이부분은 구현을 어떻게 하냐에 따라 수정필요, 이름만 따오고 싶은 것
-        U.save_image(trans(img_inference[i]), os.getcwd() + '/result/Yolo/imgs/inference/' + name + '_inference.jpg')
-        U.save_image(trans(img_origin[i]), os.getcwd() + '/result/Yolo/imgs/origin/' + name + '_origin.jpg')
+        name = txt_label_origin[i].split('/')[-1].split('.')[0] ##################이부분은 구현을 어떻게 하냐에 따라 수정필요, 이름만 따오고 싶은 것
+        U.save_image(trans(img_inference[i]), os.getcwd() + '/result/Yolo/imgs/inference/' + name + '_Inference.jpg')
+        U.save_image(trans(img_origin[i]), os.getcwd() + '/result/Yolo/imgs/origin/' + name + '_Origin.jpg')
 
     #3
     rs = random.sample(range(0,len(img_origin)),row_nums) #rs뽑고
@@ -62,6 +66,10 @@ def Yolo(img_origin, img_inference, txt_label_origin, txt_label_inference, row_n
         img_list_tmp.append(img_inference[rs[i]])
 
     showpic(img_list_tmp, row_nums)
+
+    ##4 metric 저장(mAP)
+
+
 
 
 def read_txt(dir):
@@ -89,7 +97,7 @@ def xywh2minmax(x,y,w,h):
 
     return x1, y1, x2, y2
 
-#images list는 원본과 infernce순서가 concat돼서 계속 더해진것
+#images list는 원본과 infernce 순서로 concat돼서 계속 더해진것
 def showpic(images, row_num): #type(img)=list of 3D tensor [C,W,H]
     rows=row_num; cols=2; imgsize=15;
     figure, ax = plt.subplots(nrows=rows, ncols=cols, figsize=(imgsize, imgsize))
@@ -108,8 +116,7 @@ def showpic(images, row_num): #type(img)=list of 3D tensor [C,W,H]
 
         else :
             title= 'Inference'
-            # ax.ravel()[ind].text(5,50,'SSIM: '+str(round(ssim[int(ind/3)],3))+'\n'+'PSNR: '+str(round(psnr[int(ind/3)], 2)),
-            #                      ha='center',va='bottom',bbox={'facecolor' : 'white'},size='smaller')
+
         img = torch.from_numpy(img)
         ax.ravel()[ind].imshow(img)
         ax.ravel()[ind].set_title(title)
