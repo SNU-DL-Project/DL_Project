@@ -1,0 +1,3 @@
+0_mse: tensor(0.8651)
+1_mse: tensor(0.8651)
+2_mse: tensor(0.8651)

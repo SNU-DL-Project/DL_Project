@@ -1,0 +1,10 @@
+./data/custom_SR/images/9999996_00000_d_0000026_2.jpg
+./data/custom_SR/images/9999996_00000_d_0000027_0.jpg
+./data/custom_SR/images/9999996_00000_d_0000027_1.jpg
+./data/custom_SR/images/9999996_00000_d_0000027_2.jpg
+./data/custom_SR/images/9999996_00000_d_0000028_0.jpg
+./data/custom_SR/images/9999996_00000_d_0000028_1.jpg
+./data/custom_SR/images/9999996_00000_d_0000028_2.jpg
+./data/custom_SR/images/9999996_00000_d_0000029_0.jpg
+./data/custom_SR/images/9999996_00000_d_0000029_1.jpg
+./data/custom_SR/images/9999996_00000_d_0000029_2.jpg

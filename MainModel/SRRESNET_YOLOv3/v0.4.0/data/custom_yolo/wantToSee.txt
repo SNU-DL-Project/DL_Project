@@ -1,0 +1,2 @@
+./data/custom_yolo/images/0000364_01177_d_0000799_2.jpg
+./data/custom_yolo/images/0000364_01373_d_0000780_0.jpg
