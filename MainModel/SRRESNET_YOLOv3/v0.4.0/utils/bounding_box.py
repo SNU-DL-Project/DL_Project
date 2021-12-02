@@ -15,12 +15,14 @@ _COLOR_NAME_TO_RGB = dict(
     orange=((0, 120, 210), (173, 220, 252)),
     yellowgreen=((0, 204, 84), (15, 64, 31)),
     cyan=((255, 216, 70), (103, 87, 28)),
-    purple=((255, 47, 65), (131, 0, 17)),
-    white=((220, 220, 220), (0, 0, 0)),
     pink=((246, 0, 184), (103, 0, 78)),
-
+    white=((220, 220, 220), (0, 0, 0)),
+    purple=((255, 47, 65), (131, 0, 17)),
 
 )
+
+
+
 
 _COLOR_NAMES = list(_COLOR_NAME_TO_RGB)
 
@@ -60,29 +62,31 @@ def add(image, left, top, right, bottom, label=None, color=None):
     if label and type(label) is not str:
         raise TypeError("'label' must be a str")
 
-    if label and not color:
-        hex_digest = _md5(label.encode()).hexdigest()
-        color_index = int(hex_digest, 16) % len(_COLOR_NAME_TO_RGB)
-        color = _COLOR_NAMES[color_index]
+    # if label and not color:
+    #     print(label)
+    #     print('hi')
+    #     hex_digest = _md5(label.encode()).hexdigest()
+    #     color_index = int(hex_digest, 16) % len(_COLOR_NAME_TO_RGB)
+    #     color = _COLOR_NAMES[color_index]
+    #
+    # if not color:
+    #     color = _DEFAULT_COLOR_NAME
+    #
+    # if type(color) is not str:
+    #     raise TypeError("'color' must be a str")
+    #
+    # if color not in _COLOR_NAME_TO_RGB:
+    #     msg = "'color' must be one of " + ", ".join(_COLOR_NAME_TO_RGB)
+    #     raise ValueError(msg)
+    #
+    # colors = [_rgb_to_bgr(item) for item in _COLOR_NAME_TO_RGB[color]]
+    # color, color_text = colors
 
-    if not color:
-        color = _DEFAULT_COLOR_NAME
-
-    if type(color) is not str:
-        raise TypeError("'color' must be a str")
-
-    if color not in _COLOR_NAME_TO_RGB:
-        msg = "'color' must be one of " + ", ".join(_COLOR_NAME_TO_RGB)
-        raise ValueError(msg)
-
-    colors = [_rgb_to_bgr(item) for item in _COLOR_NAME_TO_RGB[color]]
-    color, color_text = colors
-
-    _cv2.rectangle(image, (left, top), (right, bottom), color, 1)
+    _cv2.rectangle(image, (left, top), (right, bottom), color,1)
 
     if label:
         _, image_width, _ = image.shape
-
+        color_text='hi' # class 수정으로 인한 오류방지용
         label_image =  _get_label_image(label, color_text, color)
         label_height, label_width, _ = label_image.shape
 

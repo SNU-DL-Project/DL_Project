@@ -1,0 +1,10 @@
+./data/custom_yolo/images/0000364_01177_d_0000799_2.jpg
+./data/custom_yolo/images/0000364_01373_d_0000780_0.jpg
+./data/custom_yolo/images/0000364_01373_d_0000780_1.jpg
+./data/custom_yolo/images/0000364_01373_d_0000780_2.jpg
+./data/custom_yolo/images/0000364_01569_d_0000781_0.jpg
+./data/custom_yolo/images/0000364_01569_d_0000781_1.jpg
+./data/custom_yolo/images/0000364_01569_d_0000781_2.jpg
+./data/custom_yolo/images/0000364_01765_d_0000782_0.jpg
+./data/custom_yolo/images/0000364_01765_d_0000782_1.jpg
+./data/custom_yolo/images/0000364_01765_d_0000782_2.jpg
