@@ -84,7 +84,6 @@ class ListDataset(Dataset):
             #image_dir ='data/custom/images/'
             label_dir = "labels".join(image_dir.rsplit("images", 1))
             #label_dir = 'data/custom/labels'
-
             assert label_dir != image_dir, \
                 f"Image path must contain a folder named 'images'! \n'{image_dir}'"
 
@@ -220,7 +219,7 @@ def create_validation_data_loader(img_path, batch_size, img_size, n_cpu):
     :rtype: DataLoader
     """
 
-    dataset = ListDataset(img_path, img_size=img_size, multiscale=False, transform=AUGMENTATION_TRANSFORMS)
+    dataset = ListDataset(img_path, img_size=img_size, multiscale=False, transform=DEFAULT_TRANSFORMS)
     dataloader = DataLoader(
         dataset,
         batch_size=batch_size,
