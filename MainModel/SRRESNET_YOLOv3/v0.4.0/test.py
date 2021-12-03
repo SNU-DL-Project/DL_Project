@@ -111,17 +111,17 @@ Yolomodel = load_yolo_model(model_path='./config/yolov3.cfg', weights_path='./mo
 # TODO 기존에 있는 함수를 건들지 않기위해서 detect하고싶은 것들의 아래 원소만 바꿀것.
 wantTolabel_infer=['pedestrian', 'car',  'van', 'bus', 'motor', 'truck']
 img_detections, imgs = detect(Yolomodel, validation_dataloader2, output_path, img_size=416, conf_thres=0.1, nms_thres=0.5)
-print(len(img_detections))
 
-#img path list 만들기
-f=open(img_txtfile,'r')
-li=f.read().strip()
-li_list = li.split('\n')
-if li_list[-1] =='':
-    del li_list[-1]
+
+# #img path list 만들기
+# f=open(img_txtfile,'r')
+# li=f.read().strip()
+# li_list = li.split('\n')
+# if li_list[-1] =='':
+#     del li_list[-1]
 
 # inference하기
-_draw_and_save_output_images_changed(img_detections, li_list, img_size=416, output_path=output_path, classes=classes)
+_draw_and_save_output_images_changed(img_detections, imgs, img_size=416, output_path=output_path, classes=classes)
 
 ##metric 뽑아내기
 metrics_output_yolo = yolo_evaluate(Yolomodel, validation_dataloader1, classes, img_size=416, iou_thres=0.5, conf_thres=0.1, nms_thres=0.5, verbose=False)
@@ -145,9 +145,9 @@ f1.close()
 
 
 #print table
-#print_yolo_eval_stats(metrics_output=metrics_output_yolo, class_names=
-  #          ['pedestrian', 'car', 'van', 'truck', 'bus', 'motor', 'None', 'None', 'None', 'None', 'None'], verbose=True)
-
+print_yolo_eval_stats(metrics_output=metrics_output_yolo, class_names=
+           ['pedestrian', 'car', 'van', 'truck', 'bus', 'motor', 'None', 'None', 'None', 'None', 'None'], verbose=True)
+# 10개짜리 6개로 수정할면 None 지워도됨
 
 #내가 보고싶은 문서(원본) -> ./data/custom_yolo/wantToSee.txt 가서 보고 싶은 사진의 경로를 추가함으로써 txt 내용 수정할것.
 img_collection = giveMeImageCollection('./data/custom_yolo/wantToSee.txt')
