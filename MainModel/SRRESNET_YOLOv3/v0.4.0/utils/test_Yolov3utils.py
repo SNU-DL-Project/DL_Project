@@ -76,8 +76,6 @@ def Yolo(img_origin, img_inference, txt_label_origin, row_nums, wantlabel=False)
         img_list_tmp.append(img_inference[i])
 
     showpic(img_list_tmp, row_nums)
-    print('응?')
-    ##4 metric 저장(mAP)
 
 
 

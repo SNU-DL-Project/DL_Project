@@ -9,7 +9,7 @@ import numpy as np
 from torch.utils.data import DataLoader
 import bounding_box as bb
 from PIL import Image
-
+import time
 import torch
 import torchvision.transforms as transforms
 from torch.autograd import Variable
@@ -130,7 +130,10 @@ def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
 
         # Get detections
         with torch.no_grad():
+            start = time.time()
             detections = model(input_imgs)
+            end = time.time()
+            print(f'FPS : {round(1/(float(end-start)),1)}')
             detections = non_max_suppression(detections, conf_thres, nms_thres)
 
         # Store image and detections
