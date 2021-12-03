@@ -50,7 +50,9 @@ main.py 실행 및 main.py에 적힌 주석 참고
 ### 기타 변경사항  
 + loss파일 loss output 관련 수정  
 + 예비실험 결과 반영(config, blur)  
-### 추가 변경사항  
-+ test_SRutils.py 구현완료 및 추가
-+ test_Yolov3utils.py 구현완료 및 추가
-+ test.py 구현미완료(연결작업 필요) 및 추가
+
+# v0.5.0 (2021.12.03.)
+### 주요 변경사항  
+##### test_SRutils.py 구현완료 및 추가  
+##### test_Yolov3utils.py 구현완료 및 추가  
+##### test.py 구현미완료(연결작업 필요) 및 추가  
