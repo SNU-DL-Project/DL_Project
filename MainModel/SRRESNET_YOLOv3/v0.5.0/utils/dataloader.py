@@ -220,7 +220,7 @@ def create_validation_data_loader(img_path, batch_size, img_size, n_cpu):
     :rtype: DataLoader
     """
 
-    dataset = ListDataset(img_path, img_size=img_size, multiscale=False, transform=AUGMENTATION_TRANSFORMS)
+    dataset = ListDataset(img_path, img_size=img_size, multiscale=False, transform=DEFAULT_TRANSFORMS)
     dataloader = DataLoader(
         dataset,
         batch_size=batch_size,

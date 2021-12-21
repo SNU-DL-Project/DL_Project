@@ -1,99 +1,94 @@
 
 import os
-import argparse
 
-import matplotlib
 import tqdm
 import random
 import numpy as np
 from torch.utils.data import DataLoader
-import bounding_box as bb
 from PIL import Image
 import time
 import torch
 import torchvision.transforms as transforms
 from torch.autograd import Variable
-
 from models import load_yolo_model
 from utils.yoloutils import rescale_boxes, non_max_suppression
 from utils.dataloader import ImageFolder
 from utils.augutils import Resize, DEFAULT_TRANSFORMS
-
-import matplotlib.pyplot as plt2
+import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
-
-def detect_directory(model_path, weights_path, img_path, classes, output_path,
-                     batch_size=8, img_size=416, n_cpu=8, conf_thres=0.5, nms_thres=0.5):
-    """Detects objects on all images in specified directory and saves output images with drawn detections.
-    :param model_path: Path to model definition file (.cfg)
-    :type model_path: str
-    :param weights_path: Path to weights or checkpoint file (.weights or .pth)
-    :type weights_path: str
-    :param img_path: Path to directory with images to inference
-    :type img_path: str
-    :param classes: List of class names
-    :type classes: [str]
-    :param output_path: Path to output directory
-    :type output_path: str
-    :param batch_size: Size of each image batch, defaults to 8
-    :type batch_size: int, optional
-    :param img_size: Size of each image dimension for yolo, defaults to 416
-    :type img_size: int, optional
-    :param n_cpu: Number of cpu threads to use during batch generation, defaults to 8
-    :type n_cpu: int, optional
-    :param conf_thres: Object confidence threshold, defaults to 0.5
-    :type conf_thres: float, optional
-    :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
-    :type nms_thres: float, optional
-    """
-    dataloader = _create_data_loader(img_path, batch_size, img_size, n_cpu)
-    model = load_yolo_model(model_path, weights_path)
-    img_detections, imgs = detect(
-        model,
-        dataloader,
-        output_path,
-        img_size,
-        conf_thres,
-        nms_thres)
-    _draw_and_save_output_images(
-        img_detections, imgs, img_size, output_path, classes)
-
-
-def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
-    """Inferences one image with model.
-    :param model: Model for inference
-    :type model: models.Darknet
-    :param image: Image to inference
-    :type image: nd.array
-    :param img_size: Size of each image dimension for yolo, defaults to 416
-    :type img_size: int, optional
-    :param conf_thres: Object confidence threshold, defaults to 0.5
-    :type conf_thres: float, optional
-    :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
-    :type nms_thres: float, optional
-    :return: Detections on image with each detection in the format: [x1, y1, x2, y2, confidence, class]
-    :rtype: nd.array
-    """
-    model.eval()  # Set model to evaluation mode
-
-    # Configure input
-    input_img = transforms.Compose([
-        DEFAULT_TRANSFORMS,
-        Resize(img_size)])(
-        (image, np.zeros((1, 5))))[0].unsqueeze(0)
-
-    if torch.cuda.is_available():
-        input_img = input_img.to("cuda")
-
-    # Get detections
-    with torch.no_grad():
-        detections = model(input_img)
-        detections = non_max_suppression(detections, conf_thres, nms_thres)
-        detections = rescale_boxes(detections[0], img_size, image.shape[:2])
-    return detections.numpy()
-
+#
+# def detect_directory(model_path, weights_path, img_path, classes, output_path,
+#                      batch_size=8, img_size=416, n_cpu=8, conf_thres=0.5, nms_thres=0.5):
+#     """Detects objects on all images in specified directory and saves output images with drawn detections.
+#     :param model_path: Path to model definition file (.cfg)
+#     :type model_path: str
+#     :param weights_path: Path to weights or checkpoint file (.weights or .pth)
+#     :type weights_path: str
+#     :param img_path: Path to directory with images to inference
+#     :type img_path: str
+#     :param classes: List of class names
+#     :type classes: [str]
+#     :param output_path: Path to output directory
+#     :type output_path: str
+#     :param batch_size: Size of each image batch, defaults to 8
+#     :type batch_size: int, optional
+#     :param img_size: Size of each image dimension for yolo, defaults to 416
+#     :type img_size: int, optional
+#     :param n_cpu: Number of cpu threads to use during batch generation, defaults to 8
+#     :type n_cpu: int, optional
+#     :param conf_thres: Object confidence threshold, defaults to 0.5
+#     :type conf_thres: float, optional
+#     :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
+#     :type nms_thres: float, optional
+#     """
+#     dataloader = _create_data_loader(img_path, batch_size, img_size, n_cpu)
+#     model = load_yolo_model(model_path, weights_path)
+#     img_detections, imgs = detect(
+#         model,
+#         dataloader,
+#         output_path,
+#         img_size,
+#         conf_thres,
+#         nms_thres)
+#     _draw_and_save_output_images(
+#         img_detections, imgs, img_size, output_path, classes)
+#
+#
+# def detect_image(model, image, img_size=416, conf_thres=0.5, nms_thres=0.5):
+#     """Inferences one image with model.
+#     :param model: Model for inference
+#     :type model: models.Darknet
+#     :param image: Image to inference
+#     :type image: nd.array
+#     :param img_size: Size of each image dimension for yolo, defaults to 416
+#     :type img_size: int, optional
+#     :param conf_thres: Object confidence threshold, defaults to 0.5
+#     :type conf_thres: float, optional
+#     :param nms_thres: IOU threshold for non-maximum suppression, defaults to 0.5
+#     :type nms_thres: float, optional
+#     :return: Detections on image with each detection in the format: [x1, y1, x2, y2, confidence, class]
+#     :rtype: nd.array
+#     """
+#     model.eval()  # Set model to evaluation mode
+#
+#     # Configure input
+#     input_img = transforms.Compose([
+#         DEFAULT_TRANSFORMS,
+#         Resize(img_size)])(
+#         (image, np.zeros((1, 5))))[0].unsqueeze(0)
+#
+#     if torch.cuda.is_available():
+#         input_img = input_img.to("cuda")
+#
+#     # Get detections
+#     with torch.no_grad():
+#         detections = model(input_img)
+#         detections = non_max_suppression(detections, conf_thres, nms_thres)
+#         detections = rescale_boxes(detections[0], img_size, image.shape[:2])
+#     return detections.numpy()
+#
 
 def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
     """Inferences images with model.
@@ -141,91 +136,91 @@ def detect(model, dataloader, output_path, img_size, conf_thres, nms_thres):
         imgs.extend(img_paths)
     return img_detections, imgs
 
-
-def _draw_and_save_output_images(img_detections, imgs, img_size, output_path, classes):
-    """Draws detections in output images and stores them.
-    :param img_detections: List of detections
-    :type img_detections: [Tensor]
-    :param imgs: List of paths to image files
-    :type imgs: [str]
-    :param img_size: Size of each image dimension for yolo
-    :type img_size: int
-    :param output_path: Path of output directory
-    :type output_path: str
-    :param classes: List of class names
-    :type classes: [str]
-    """
-
-    # Iterate through images and save plot of detections
-    for (image_path, detections) in zip(imgs, img_detections):
-        #print(f"Image {image_path}:")
-        _draw_and_save_output_image(image_path, detections, img_size, output_path, classes)
-
-
-
-def _draw_and_save_output_image(image_path, detections, img_size, output_path, classes):
-    """Draws detections in output image and stores this.
-      :param image_path: Path to input image
-      :type image_path: str
-      :param detections: List of detections on image
-      :type detections: [Tensor]
-      :param img_size: Size of each image dimension for yolo
-      :type img_size: int
-      :param output_path: Path of output directory
-      :type output_path: str
-      :param classes: List of class names
-      :type classes: [str]
-      """
-    color_list = [(51/255,153/255,1),(102/255,1,178/255),(1,1,51/255),(1,0,1),(1,1,1),(204/255,0,102/255)]
-    # Create plot
-    img = np.array(Image.open(image_path))
-    fig, ax = plt2.subplots(1)
-    ax.imshow(img)
-
-    # import bounding_box as bb
-    # ccolor = bb._COLOR_NAMES
-    # Rescale boxes to original image
-    detections = rescale_boxes(detections, img_size, img.shape[:2])
-    unique_labels = detections[:, -1].cpu().unique()
-    n_cls_preds = len(unique_labels)
-    # Bounding-box colors
-    cmap = plt2.get_cmap("tab20b")
-    colors = [cmap(i) for i in np.linspace(0, 1, n_cls_preds)]
-    bbox_colors = random.sample(colors, n_cls_preds)
-    for x1, y1, x2, y2, conf, cls_pred in detections:
-
-        print(f"\t+ Label: {classes[int(cls_pred)]} | Confidence: {conf.item():0.4f}")
-
-        box_w = x2 - x1
-        box_h = y2 - y1
-        import test
-        color = color_list[int(np.where(unique_labels == int(cls_pred))[0])]
-        # Create a Rectangle patch
-        if classes[int(cls_pred)] in test.wantTolabel_infer:
-            bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=0.5, edgecolor=color, facecolor="none")
-        # Add the bbox to the plot
-
-
-        ax.add_patch(bbox)
-        # Add label
-        # plt2.text(
-        #     x1,
-        #     y1,
-        #     s=classes[int(cls_pred)],
-        #     color="white",
-        #     verticalalignment="top",
-        #     bbox={"color": color, "pad": 0})
-
-    # Save generated image with detections
-    plt2.axis("off")
-    plt2.gca().xaxis.set_major_locator(NullLocator())
-    plt2.gca().yaxis.set_major_locator(NullLocator())
-    filename = os.path.basename(image_path).split(".")[0]
-    output_path = os.path.join(output_path, f"{filename}.jpg")
-
-
-    #plt2.savefig(output_path, bbox_inches="tight", pad_inches=0.0 )
-    plt2.close()
+#
+# def _draw_and_save_output_images(img_detections, imgs, img_size, output_path, classes):
+#     """Draws detections in output images and stores them.
+#     :param img_detections: List of detections
+#     :type img_detections: [Tensor]
+#     :param imgs: List of paths to image files
+#     :type imgs: [str]
+#     :param img_size: Size of each image dimension for yolo
+#     :type img_size: int
+#     :param output_path: Path of output directory
+#     :type output_path: str
+#     :param classes: List of class names
+#     :type classes: [str]
+#     """
+#
+#     # Iterate through images and save plot of detections
+#     for (image_path, detections) in zip(imgs, img_detections):
+#         #print(f"Image {image_path}:")
+#         _draw_and_save_output_image(image_path, detections, img_size, output_path, classes)
+#
+#
+#
+# def _draw_and_save_output_image(image_path, detections, img_size, output_path, classes):
+#     """Draws detections in output image and stores this.
+#       :param image_path: Path to input image
+#       :type image_path: str
+#       :param detections: List of detections on image
+#       :type detections: [Tensor]
+#       :param img_size: Size of each image dimension for yolo
+#       :type img_size: int
+#       :param output_path: Path of output directory
+#       :type output_path: str
+#       :param classes: List of class names
+#       :type classes: [str]
+#       """
+#     color_list = [(51/255,153/255,1),(102/255,1,178/255),(1,1,51/255),(1,0,1),(1,1,1),(204/255,0,102/255)]
+#     # Create plot
+#     img = np.array(Image.open(image_path))
+#     fig, ax = plt.subplots(1)
+#     ax.imshow(img)
+#
+#     # import bounding_box as bb
+#     # ccolor = bb._COLOR_NAMES
+#     # Rescale boxes to original image
+#     detections = rescale_boxes(detections, img_size, img.shape[:2])
+#     unique_labels = detections[:, -1].cpu().unique()
+#     n_cls_preds = len(unique_labels)
+#     # Bounding-box colors
+#     cmap = plt.get_cmap("gist_rainbow")
+#     colors = [cmap(i) for i in np.linspace(0, 1, n_cls_preds)]
+#     bbox_colors = random.sample(colors, n_cls_preds)
+#     for x1, y1, x2, y2, conf, cls_pred in detections:
+#
+#         print(f"\t+ Label: {classes[int(cls_pred)]} | Confidence: {conf.item():0.4f}")
+#
+#         box_w = x2 - x1
+#         box_h = y2 - y1
+#         #import test
+#         color = color_list[int(np.where(unique_labels == int(cls_pred))[0])]
+#         # Create a Rectangle patch
+#        # if classes[int(cls_pred)] in test.wantTolabel_infer:
+#        #     bbox = patches.Rectangle((x1, y1), box_w, box_h, linewidth=0.5, edgecolor=color, facecolor="none")
+#         # Add the bbox to the plot
+#
+#
+#        # ax.add_patch(bbox)
+#         # Add label
+#         # plt2.text(
+#         #     x1,
+#         #     y1,
+#         #     s=classes[int(cls_pred)],
+#         #     color="white",
+#         #     verticalalignment="top",
+#         #     bbox={"color": color, "pad": 0})
+#
+#     # Save generated image with detections
+#     plt.axis("off")
+#     plt.gca().xaxis.set_major_locator(NullLocator())
+#     plt.gca().yaxis.set_major_locator(NullLocator())
+#     filename = os.path.basename(image_path).split(".")[0]
+#     output_path = os.path.join(output_path, f"{filename}.jpg")
+#
+#
+#     #plt2.savefig(output_path, bbox_inches="tight", pad_inches=0.0 )
+#     plt.close()
 
 
 def _create_data_loader(img_path, batch_size, img_size, n_cpu):
@@ -254,7 +249,7 @@ def _create_data_loader(img_path, batch_size, img_size, n_cpu):
 
 ###
 
-def _draw_and_save_output_images_changed(img_detections, imgs, img_size, output_path, classes):
+def _draw_and_save_output_images_for_metric(img_detections, imgs, img_size, output_path, classes):
     """Draws detections in output images and stores them.
     :param img_detections: List of detections
     :type img_detections: [Tensor]
@@ -270,12 +265,11 @@ def _draw_and_save_output_images_changed(img_detections, imgs, img_size, output_
 
     # Iterate through images and save plot of detections
     for (image_path, detections) in zip(imgs, img_detections):
-        #print(f"Image {image_path}:")
-        _draw_and_save_output_image_changed(image_path, detections, img_size, output_path, classes)
+        _draw_and_save_output_image_for_metric(image_path, detections, img_size, output_path, classes)
 
 
 
-def _draw_and_save_output_image_changed(image_path, detections, img_size, output_path, classes):
+def _draw_and_save_output_image_for_metric(image_path, detections, img_size, output_path, classes):
     """Draws detections in output image and stores this.
      :param image_path: Path to input image
      :type image_path: str
@@ -291,17 +285,15 @@ def _draw_and_save_output_image_changed(image_path, detections, img_size, output
     color_list = [(51/255,153/255,1),(102/255,1,178/255),(1,1,51/255),(1,0,1),(1,1,1),(204/255,0,102/255)]
     # Create plot
     img = np.array(Image.open(image_path))
-    fig, ax = plt2.subplots(1)
+    fig, ax = plt.subplots(1)
     ax.imshow(img)
 
-    # import bounding_box as bb
-    # ccolor = bb._COLOR_NAMES
     # Rescale boxes to original image
     detections = rescale_boxes(detections, img_size, img.shape[:2])
     unique_labels = detections[:, -1].cpu().unique()
     n_cls_preds = len(unique_labels)
     # Bounding-box colors
-    cmap = plt2.get_cmap("tab20b")
+    cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, n_cls_preds)]
     bbox_colors = random.sample(colors, n_cls_preds)
     for x1, y1, x2, y2, conf, cls_pred in detections:
@@ -310,7 +302,7 @@ def _draw_and_save_output_image_changed(image_path, detections, img_size, output
 
         box_w = x2 - x1
         box_h = y2 - y1
-        import test
+
         color = color_list[int(np.where(unique_labels == int(cls_pred))[0])]
         # Create a Rectangle patch
 
@@ -329,14 +321,14 @@ def _draw_and_save_output_image_changed(image_path, detections, img_size, output
         #     bbox={"color": color, "pad": 0})
 
     # Save generated image with detections
-    plt2.axis("off")
-    plt2.gca().xaxis.set_major_locator(NullLocator())
-    plt2.gca().yaxis.set_major_locator(NullLocator())
+    plt.axis("off")
+    plt.gca().xaxis.set_major_locator(NullLocator())
+    plt.gca().yaxis.set_major_locator(NullLocator())
     filename = os.path.basename(image_path).split(".")[0]
     output_path = os.path.join(output_path, f"{filename}.jpg")
 
 
-    plt2.savefig(output_path, bbox_inches="tight", pad_inches=0.0 )
-    plt2.close()
+    plt.savefig(output_path, bbox_inches="tight", pad_inches=0.0 )
+    plt.close()
 
 

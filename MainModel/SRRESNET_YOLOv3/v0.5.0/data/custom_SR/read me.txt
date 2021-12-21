@@ -1,0 +1,6 @@
+##read me
+- yolo의 dataloader를 사용했기때문에 
+ "./DL/MainModel/SRRESNET_YOLOv3\v0.5.0/data/custom_SR/labels" 에 
+ "./DL/MainModel/SRRESNET_YOLOv3\v0.5.0/data/custom_SR/images/~.jpg"와 같은 이름을 가진 dummy txt파일들이 필요하다.
+
+- 내용은 중요하지 않고 같은 이름을 가진 txt파일들만 있으면 된다.
