@@ -9,8 +9,8 @@ from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
 
 
-def SR(img_L, img_S, img_O, imgname,row_num):
-    from test import ssim_lists_new, psnr_lists_new, mse_lists_new
+def SR(img_L, img_S, img_O, imgname,row_num, ssim_lists_new, psnr_lists_new, mse_lists_new, batch_size):
+    #from test import ssim_lists_new, psnr_lists_new, mse_lists_new
     ## save ##############################################################################
     #makedir
     if not os.path.exists(os.getcwd()+'/result'):
@@ -49,7 +49,7 @@ def SR(img_L, img_S, img_O, imgname,row_num):
 
         #mse save
         if i == 0 : f1=open('result/SR/metrics/mse.txt', 'w')
-        else : f1=open('result/SR/metrics/mse.txt', 'a')
+        else : f1 = open('result/SR/metrics/mse.txt', 'a')
         f1.write(imgname[i]+'_mse: '+ str(mse_lists_new[i]) + '\n')
         f1.close()
 
@@ -71,9 +71,12 @@ def SR(img_L, img_S, img_O, imgname,row_num):
 
     # 2개만 출력, random하게 추출
     #    for i in range(0,row_num):
-    print(len(ssim_lists_new))
-    print(row_num)
+    print('printing img...')
+    if len(ssim_lists_new) < row_num : print('test이미지가 출력하고자 하는 열의 4배 이상이어야합니다. (batch size문제)')
+    random.seed(42)
     idx_list=random.sample(range(0, len(ssim_lists_new)), row_num) # 중복업이 뽑음 row_num개
+    idx_list=sorted(idx_list)
+    print(idx_list)
 
     for i in idx_list:
         # permute 하는 이유는 PIL to tensor 과정에서 (a,b,c)->(c,b,a) 가 된다. #실제로는 필요없음
@@ -89,19 +92,20 @@ def SR(img_L, img_S, img_O, imgname,row_num):
         img_list.append(img_S[i])
         img_list.append(img_O[i])
 
-    showpic(img_list, psnr_list, ssim_list, row_num, round(np.mean(psnr_list_tmp),3), round(np.mean(ssim_list_tmp),3))
+    showpic(img_list, psnr_list, ssim_list, row_num, round(np.mean(psnr_list_tmp),3), round(np.mean(ssim_list_tmp),3), mse_lists_new=mse_lists_new, batch_size=batch_size)
+    print('print done')
     #여기의 psnr_list 는 row_num개의 psnr_list
     ####################################################################################
 
-    return;
 
 
-def showpic(images, psnr, ssim, row_num, psnr_mean, ssim_mean): #type(img)=list of 3D tensor [C,W,H]
+
+def showpic(images, psnr, ssim, row_num, psnr_mean, ssim_mean, mse_lists_new, batch_size): #type(img)=list of 3D tensor [C,W,H]
     rows=row_num; cols=3; imgsize=10;
     figure, ax = plt.subplots(nrows=rows,ncols=cols,figsize=(imgsize, imgsize))
 
-    from test import mse_lists_new
-    figure.suptitle(f'[mPSNR : {psnr_mean}]  [mSSIM : {ssim_mean} ]  [ mMSE : {round(float(np.mean(mse_lists_new)),4)}]',ha='center', va='baseline')
+
+    figure.suptitle(f'[mPSNR : {psnr_mean}]  [mSSIM : {ssim_mean}]  [mMSE : {round(float(np.mean(mse_lists_new)),4)}]',ha='center', va='baseline')
 
     for ind,img in enumerate(images):
 
@@ -111,14 +115,18 @@ def showpic(images, psnr, ssim, row_num, psnr_mean, ssim_mean): #type(img)=list 
             title= 'SR'
         else :
             title= 'Origin'
-            from test import mse_lists_new
-            ax.ravel()[ind].text(0,0,'SSIM: '+str(round(ssim[int(ind/3)],3))+'\n'+'PSNR: '+str(round(psnr[int(ind/3)], 2))+'\n'+
-                                 'MSE: '+str(np.round(mse_lists_new[int(ind/3)].numpy(),3)),  ha='center',va='bottom',bbox={'facecolor' : 'white'},size='smaller')
 
-        ax.ravel()[ind].imshow(img.permute(1,2,0))
+            ax.ravel()[ind].text(0,0,'SSIM: '+str(round(ssim[int(ind/3)],3))+'\n'+'PSNR: '+str(round(psnr[int(ind/3)], 2))+'\n'+
+                                 'MSE: '+str(np.round(mse_lists_new[int(ind/3)],4)),  ha='center',va='bottom',bbox={'facecolor' : 'white'},size='smaller')
+
+        if batch_size == 1 :
+            ax.ravel()[ind].imshow(np.squeeze(img).permute(1,2,0))
+        else :
+            ax.ravel()[ind].imshow(img.permute(1,2,0))
         ax.ravel()[ind].set_title(title)
 
         ax.ravel()[ind].set_axis_off()
+
     plt.tight_layout()
     plt.show()
 

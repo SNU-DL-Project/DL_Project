@@ -1,14 +1,9 @@
-import random
-
-import cv2
 import torchvision.utils as U
 import os
 import numpy as np
 from PIL import Image
-
 import utils.bounding_box as bb
 import torchvision.transforms as transforms
-import torch
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 trans = transforms.ToTensor()
@@ -43,7 +38,6 @@ def Yolo(img_origin, img_inference, txt_label_origin, row_nums, wantlabel=False)
     for i in range(0, len(img_origin)):
         #1
         ##origin bbox drawing
-
         label_origin=read_txt(txt_label_origin[i])
 
         img_origin_new.append(np.array(Image.open(img_origin[i]).resize((416,416))))
@@ -125,13 +119,6 @@ def showpic(images2, row_num): #type(img)=list of 3D tensor [C,W,H]
     plt.legend(handles=patches, bbox_to_anchor=(1.01, 1), loc=6, borderaxespad=1 )
 
     plt.show()
-
-
-
-
-
-
-
 
 
 

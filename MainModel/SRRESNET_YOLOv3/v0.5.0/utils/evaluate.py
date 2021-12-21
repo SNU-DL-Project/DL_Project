@@ -3,13 +3,10 @@ from __future__ import division
 import tqdm
 import math
 import numpy as np
-
 from terminaltables import AsciiTable
-
 import torch
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
-
 from .srutils import ssim
 from .yoloutils import ap_per_class, get_yolo_batch_statistics, non_max_suppression, xywh2xyxy
 from .augutils import sr_downsample
@@ -59,6 +56,7 @@ def yolo_evaluate(model, dataloader, class_names, img_size, iou_thres, conf_thre
 
         # Extract labels
         labels += targets[:, 1].tolist()
+
         # Rescale target
         targets[:, 2:] = xywh2xyxy(targets[:, 2:])
         targets[:, 2:] *= img_size
@@ -106,32 +104,38 @@ def srres_evaluate(model_srres, dataloader, verbose):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     valing_results = {'mse': 0, 'ssims': 0, 'psnr': 0, 'ssim': 0, 'batch_sizes': 0}
-    real_img_list=[]
-    fake_img_list=[]
-    low_img_list=[]
-    mse_list=[]
-    ssim_list=[]
-    psnr_list=[]
-    for _, real_imgs, _ in tqdm.tqdm(dataloader, desc="Validating"):
+    real_img_list=[]; fake_img_list=[]; low_img_list=[]; mse_list=[]; ssim_list=[];psnr_list=[];
+
+    for _, real_imgs,_ in tqdm.tqdm(dataloader, desc="Validating"):
+
         batch_size = real_imgs.size(0)
-        model_srres.hyperparams['lr_height']=104
-        lr_imgs = sr_downsample(real_imgs, noise=False, down_size=int(model_srres.hyperparams['lr_height'])) ## 강제로 바꿈 기존 lr_height가 없길래
-        low_img_list.append(lr_imgs) # 출력용
+        model_srres.hyperparams['lr_height']=104 # size 정의
+        lr_imgs = sr_downsample(real_imgs, noise=False, down_size=int(model_srres.hyperparams['lr_height']))
         lr_imgs = lr_imgs.to(device, non_blocking=True)
         real_imgs = real_imgs.to(device, non_blocking=True)
-        #출력용
-        real_img_list.append(real_imgs)
+
+
         with torch.no_grad():
             fake_imgs = model_srres(lr_imgs)
-            #출력용
-            fake_img_list.append(fake_imgs)
+
         valing_results['batch_sizes'] += batch_size
-        batch_mse = ((fake_imgs - real_imgs) ** 2).data.mean()
-        valing_results['mse'] += batch_mse * batch_size;mse_list.append(valing_results['mse'])
+
+        batch_mse = ((fake_imgs - real_imgs) ** 2).mean()
+        mse_step = batch_mse * batch_size
+        valing_results['mse'] += mse_step;
         batch_ssim = ssim(fake_imgs, real_imgs).item()
         valing_results['ssims'] += batch_ssim * batch_size
-        valing_results['psnr'] = 10 * math.log10((real_imgs.max() ** 2) / (valing_results['mse'] / valing_results['batch_sizes'])); psnr_list.append(valing_results['psnr'])
-        valing_results['ssim'] = valing_results['ssims'] / valing_results['batch_sizes']; ssim_list.append(valing_results['ssim'])
+        valing_results['psnr'] = 10 * math.log10((real_imgs.max() ** 2) / (valing_results['mse'] / valing_results['batch_sizes']));
+        valing_results['ssim'] = valing_results['ssims'] / valing_results['batch_sizes'];
+
+        #parameter 전달용
+        fake_img_list.append(fake_imgs)
+        low_img_list.append(lr_imgs)
+        real_img_list.append(real_imgs)
+        ssim_list.append(valing_results['ssim'])
+        psnr_list.append(valing_results['psnr'])
+        mse_list.append(round(mse_step.item(),8))
+
 
     #MSE, PSNR, SSIM
     metrics_output = [float(valing_results['mse']/valing_results['batch_sizes']),

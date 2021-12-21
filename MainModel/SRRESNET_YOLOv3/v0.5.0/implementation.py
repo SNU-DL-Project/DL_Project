@@ -6,7 +6,7 @@ from utils.dataloader import create_validation_data_loader,create_train_data_loa
 from utils.imple_utils import _create_data_loader
 from utils.evaluate import srres_evaluate, yolo_evaluate, print_yolo_eval_stats
 import os
-from utils.imple_utils import detect, detect_image, _draw_and_save_output_images_changed
+from utils.imple_utils import detect, detect_image, _draw_and_save_output_images_for_metric
 import cv2
 
 # #img list 만들기
@@ -31,7 +31,7 @@ img_detections, imgs = detect(yoloModel_imple, imple_dataloader, output_path, im
 
 #img 저장
 classes=["pedestrian", "car", "van", "truck","bus" ,"motor"]
-_draw_and_save_output_images_changed(img_detections, imgs, img_size=416, output_path=output_path, classes=classes)
+_draw_and_save_output_images_for_metric(img_detections, imgs, img_size=416, output_path=output_path, classes=classes)
 
 #동영상만들기
 # out = './result/Yolo_video/'
